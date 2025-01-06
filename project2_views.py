@@ -194,6 +194,10 @@ def fetch_reports(stock_code):
             'co_id': stock_code,
             'TYPEK': 'all',
             'isnew': 'true'
+
+
+
+            
         }
 
         for attempt in range(2):  # 嘗試兩次，第一次 step = 1，第二次 step = 2
