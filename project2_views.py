@@ -185,24 +185,20 @@ def fetch_reports(stock_code):
     ]
     results = []
 
-    for url in urls:
-        form_data = {
+    for url in urls: # 執行爬取
+        form_data = { # 發送 POST 請求的表單資料
             'encodeURIComponent': 1,
             'step': 1,  # 初始設置 step 為 1
             'firstin': 1,
             'off': 1,
             'co_id': stock_code,
             'TYPEK': 'all',
-            'isnew': 'true'
-
-
-
-            
+            'isnew': 'true'       
         }
 
         for attempt in range(2):  # 嘗試兩次，第一次 step = 1，第二次 step = 2
             try:
-                response = requests.post(url, data=form_data)
+                response = requests.post(url, data=form_data)#發送表單資料
                 response.raise_for_status()
                 
                 # 使用 BeautifulSoup 解析 HTML
@@ -224,7 +220,7 @@ def fetch_reports(stock_code):
 
             time.sleep(2)  # 每次嘗試後暫停 2 秒
         
-        if not results:
+        if not results:#嘗試兩次仍失敗
             print(f"爬取失敗：{url}")
     
     return results
@@ -240,6 +236,7 @@ def save_reports(stock_code, reports):
         stock.B = reports[0]
         stock.P = reports[1]
         stock.C = reports[2]
+        # 將更新的資料存回資料庫
         stock.save()
 
 
