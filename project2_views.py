@@ -242,8 +242,8 @@ def save_reports(stock_code, reports):
 
 
 def validate_and_save_reports_from_csv(csv_file_path, batch_size=5):
-    df = pd.read_csv(csv_file_path, encoding='big5')
-    stock_codes = df['code'].tolist()
+    df = pd.read_csv(csv_file_path, encoding='big5')#讀取 CSV 檔案encoding='big5' 是為了處理中文編碼的情況
+    stock_codes = df['code'].tolist()# 從 'code' 欄位中提取股票代碼，並轉換為列表
     failed_stock_codes = []  # 用於記錄失敗的股票代號
     updated_stock_codes = []  # 用於記錄成功更新的股票代號
 
@@ -253,14 +253,15 @@ def validate_and_save_reports_from_csv(csv_file_path, batch_size=5):
 
         for stock_code in batch:
             print(f"Processing stock code: {stock_code}")
-            attempts = 0
-            max_attempts = 2
+            attempts = 0 # 嘗試的次數初始化為 0
+            max_attempts = 2 # 最多嘗試2次
             reports = None
 
             while attempts < max_attempts:
+                # 呼叫爬取函數 fetch_reports 獲取該股票的報表
                 reports = fetch_reports(stock_code)
                 if reports:
-                    save_reports(stock_code, reports)
+                    save_reports(stock_code, reports)# 保存爬取到的報表到資料庫
                     print(f"Reports for {stock_code} saved and updated successfully.")
                     updated_stock_codes.append(stock_code)  # 記錄成功更新的股票代號
                     break
@@ -278,7 +279,7 @@ def validate_and_save_reports_from_csv(csv_file_path, batch_size=5):
 
 
 def query_report(request):
-    if request.method == 'POST':
+    if request.method == 'POST':#檢查爬蟲方法
         stock_code = request.POST.get('stock_code')
         if stock_code:
             try:
@@ -288,7 +289,7 @@ def query_report(request):
                 # 轉換 HTML 內容為 DataFrame
                 def html_to_df(html):
                     try:
-                        return pd.read_html(StringIO(html))[0]
+                        return pd.read_html(StringIO(html))[0]# 解析 HTML
                     except ValueError:
                         return pd.DataFrame()  # 返回空的 DataFrame，表示找不到表格
                 
@@ -310,24 +311,25 @@ def query_report(request):
 
                 # 提取數據的內嵌函數
                 def extract_data_from_html(html_content):
-                    soup = BeautifulSoup(html_content, 'html.parser')
+                    soup = BeautifulSoup(html_content, 'html.parser') # 解析 HTML
+                    data = {}
                     data = {}
 
                     # 可指定提取哪一列的值
                     def extract_value(label, column_index=1, occurrence=1):
-                        found_values = []
+                        found_values = []# 儲存找到的所有匹配值
                         rows = soup.find_all('tr')
                         for row in rows:
-                            columns = row.find_all('td')
+                            columns = row.find_all('td')# 獲取行中的所有列
                             if len(columns) > column_index:
-                                cell_label = columns[0].get_text(strip=True)
+                                cell_label = columns[0].get_text(strip=True)# 提取標籤值
                                 if cell_label == label:
                                     found_values.append(columns[column_index].get_text(strip=True))
                         if occurrence <= len(found_values):
                             return found_values[occurrence - 1]
                         return None
 
-                    return {
+                    return {# 返回提取的財務數據字典
                         '現金及約當現金': extract_value('現金及約當現金'),
                         '負債總額': extract_value('負債總額') or extract_value('負債總計'),
                         '資產總額': extract_value('資產總額') or extract_value('資產總計'),
