@@ -60,13 +60,13 @@
 
 1. **克隆專案**：
    ```bash
-   git clone https://github.com/your-repo/stock-finance-system.git
+   git clone https://github.com/foursh/sdf.git
    cd stock-finance-system
    ```
 
 2. **安裝依賴**：
    ```bash
-   pip install -r requirements.txt
+   pip install Django==4.2.5 requests==2.31.0 pandas==2.1.1
    ```
 
 3. **設置環境變數**：
@@ -99,7 +99,7 @@
 2. **回覆結果**：系統將回覆財務報表分析分數與排名。
 
 ### 網頁查詢
-1. 瀏覽 `http://127.0.0.1:8000/query_report/`。
+1. 瀏覽 `http://starklab.tw:3000/query/`。
 2. 輸入股票代號進行查詢，瀏覽報表與計算結果。
 
 ---
@@ -139,10 +139,10 @@ stock-finance-system/
 ---
 
 ## 聯絡方式
-- 作者：Your Name
-- 電子郵件：your_email@example.com
+- 作者：xxx
+- 電子郵件：xxx@gmail.com
 
 ---
 
 ## 授權
-本專案採用 MIT 授權，詳見 [LICENSE](LICENSE)。
+本專案採用 xxx授權，詳見 xxxxxxxxx。
